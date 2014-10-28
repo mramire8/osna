@@ -1,12 +1,12 @@
 import ConfigParser
 import sys
 import time
-
+import json
 from TwitterAPI import TwitterAPI
 
 USER_DB = "../../data/social_honeypot_icwsm_2011/"
-USERS_GOOD="legitimate_users.txt"
-USERS_BOTS="content_polluters.txt"
+USERS_GOOD = "legitimate_users.txt"
+USERS_BOTS = "content_polluters.txt"
 
 
 def get_twitter(config_file):
@@ -24,6 +24,7 @@ def get_twitter(config_file):
         config.get('twitter', 'access_token'),
         config.get('twitter', 'access_token_secret'))
     return twitter
+
 
 twitter = get_twitter('../../twitter.cfg')
 print 'Established Twitter connection.'
@@ -44,9 +45,10 @@ def read_file_names(filename):
 
 
 def read_users():
-    good = read_file_names(USER_DB+USERS_GOOD)
-    bots = read_file_names(USER_DB+USERS_BOTS)
+    good = read_file_names(USER_DB + USERS_GOOD)
+    bots = read_file_names(USER_DB + USERS_BOTS)
     return good, bots
+
 
 good, bots = read_users()
 print 'Read', len(good), 'good. \nRead', len(bots), "bots."
@@ -67,6 +69,8 @@ def robust_request(twitter, resource, params, max_tries=5):
         request = twitter.request(resource, params)
         if request.status_code == 200:
             return request
+        elif request.status_code == 404 or request.status_code == 34:
+            return None
         else:
             print >> sys.stderr, 'Got error:', request.text, '\nsleeping for 15 minutes.'
             sys.stderr.flush()
@@ -83,20 +87,41 @@ def get_user_timeline(user_id, twitter):
       A list of Twitter screen names.
     """
     # get list of friends aka following accounts. 
-    request = robust_request(twitter, 'statuses/user_timeline', {'user_id': user_id, 'count': 200, 'contributor_details': True}, max_tries=5)
+    request = robust_request(twitter, 'statuses/user_timeline',
+                             {'user_id': user_id, 'count': 200, 'contributor_details': True}, max_tries=5)
+
+
     timeline = []
-    for r in request.get_iterator():
-        if 'user' in r:
-          timeline.append(r)
-     return timeline
+    if validate_request(request):
+
+        for r in request.get_iterator():
+            if 'user' in r:
+                timeline.append(r)
+    return timeline
+
+
+def validate_request(request):
+    if request is None:
+        return False
+    elif 'errors' in request:
+        return False
+    else:
+        return True
 
 
 def get_all_timelines(list_users, twitter, output):
+    file_output = open(output, "a")
     for user in list_users:
-        strs = json.dumps(get_user_timeline(user, twitter))
-        s = "[%s]" % ",\n".join(strs)
-        open(output,"a").write(s)
+        timeline = get_user_timeline(user, twitter)
+        if len(timeline) > 0:
+            strs = [json.dumps(timeline)]
+            s = "[%s]" % ",\n".join(strs)
+            file_output.write(s)
+    file_output.close()
 
-
-get_all_timelines(good, twitter, './good.json')
-get_all_timelines(good, twitter, './bots.json')
+import random
+random.seed(52234)
+good1k= random.sample(good, 1000)
+bots1k = random.sample(bots, 1000)
+get_all_timelines(good1k, twitter, './good.json')
+get_all_timelines(bots1k, twitter, './bots.json')
