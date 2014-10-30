@@ -69,7 +69,7 @@ def robust_request(twitter, resource, params, max_tries=5):
         request = twitter.request(resource, params)
         if request.status_code == 200:
             return request
-        elif request.status_code == 404 or request.status_code == 34:
+        elif request.status_code == 404 or request.status_code == 34 or "Not authorized" in request.text:
             return None
         else:
             print >> sys.stderr, 'Got error:', request.text, '\nsleeping for 15 minutes.'
@@ -111,7 +111,8 @@ def validate_request(request):
 
 def get_all_timelines(list_users, twitter, output):
     file_output = open(output, "a")
-    for user in list_users:
+    for i, user in enumerate(list_users):
+        print "user", i
         timeline = get_user_timeline(user, twitter)
         if len(timeline) > 0:
             strs = [json.dumps(timeline)]
@@ -121,7 +122,9 @@ def get_all_timelines(list_users, twitter, output):
 
 import random
 random.seed(52234)
-good1k= random.sample(good, 1000)
-bots1k = random.sample(bots, 1000)
-get_all_timelines(good1k, twitter, './good.json')
-get_all_timelines(bots1k, twitter, './bots.json')
+# good1k= random.sample(good, 1000)
+# bots1k = random.sample(bots, 1000)
+print "good ones\n"+"-"*40
+# get_all_timelines(good[:1000], twitter, './good.json')
+print "bad ones\n"+"-"*40
+get_all_timelines(bots[:1000], twitter, './bots.json')
