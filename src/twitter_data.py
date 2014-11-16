@@ -1,60 +1,44 @@
 
 import json
-
-data_path = 'C:/Users/mramire8/Documents/Datasets/twitter'
-
-f = open(data_path + "/good.json")
-
-i = 0
-tot = 0
-for line in f:
-    user = line.split("]][[")
-    print user[0]
-    last = len(user)
-    print "Total %s users" % last
- 
-
-good = []
-for i,tweets in enumerate(user):
-#         if i == 165:
-#             print tweets[544928-5:544928+5]
-        if i == 0:
-            t = json.loads(tweets[1:] + "]")
-        elif i == (last-1):
-            t = json.loads("["+tweets[:-1])
-        else:
-            t = json.loads("["+tweets+"]")
-        good.append(t)
-        print "User %s, tweets %s" % (i, len(t))
-
 import pickle    
 
-# <codecell>
+data_path = 'C:/Users/mramire8/Documents/Datasets/twitter'
+data_path = '../../data/twitter'
 
-f2 = open(data_path + "/bots.json")
-for line2 in f2:
-    bots = line2.split("]][[")
-#     print bots[0]
-    last = len(bots)
 
-print "Total %s users" % last
- 
+def get_tweets_file(path):
+    f = open(path)
 
-# <codecell>
+    i = 0
+    users = []
+    for line in f:
+        data = line.split("]][[")
+        last = len(data)
+
+    for i,tweets in enumerate(data):
+            if i == 0:
+                t = json.loads(tweets[1:] + "]")
+            elif i == (last-1):
+                t = json.loads("["+tweets[:-1])
+            else:
+                t = json.loads("["+tweets+"]")
+            users.append(t)
+
+    return users
+
+good = get_tweets_file(data_path + "/good.json")
+print "Real users %s" % (len(good))
+     
+bots = get_tweets_file(data_path + "/bots.json")
+print "Bot users %s" % (len(bots))
+
 
 from collections import Counter
 
 bts = Counter()
-for i,tweets in enumerate(bots):
-    if i == 0:
-        t = json.loads(tweets[1:] + "]")
-    elif i == (last-1):
-        t = json.loads("["+tweets[:-1])
-    else:
-        t = json.loads("["+tweets+"]")
-    bts.update([len(t)])
 
-# <codecell>
+for i,tweets in enumerate(bots):
+    bts.update([len(tweets)])
 
 import numpy as np
 print bts.most_common(4)
@@ -65,6 +49,5 @@ print 1. * np.multiply(np.array(bts.values()),np.array(bts.keys())).sum() / sum(
 
 print np.array(bts.keys()) 
 
-# <codecell>
 
 
