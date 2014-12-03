@@ -1,0 +1,130 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{naaclhlt2015}
+\usepackage{latexsym}
+
+% For citations
+\usepackage[authoryear,round]{natbib}
+%\usepackage{hyperref}
+
+% For algorithms		
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+% \newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+
+%For figures
+\usepackage{graphicx}
+\usepackage{subfigure} 
+\usepackage{multirow}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{courier}
+\usepackage{enumerate}
+\usepackage{helvet}
+\usepackage{times}
+%%%%%%%%%
+%% New Commands
+%%%%%%%%%
+
+%%%%%%%%%
+%% Temporary commands, to be deleted
+%%%%%%%%%
+
+\newcommand{\note}[1]{{\tt Note: #1}} % this should be deleted before the submission
+\newcommand{\outl}[1]{{\tt Outline: #1}} % this should be deleted before the submission
+\newcommand{\notemb}[1]{{\color{blue}MB: #1}}
+\newcommand{\noteac}[1]{{\color{cyan}AC: #1}}
+\newcommand{\noteme}[1]{{\color{green}ME: #1}}
+\newcommand{\fixme}[1]{{{\tt\color{red}[[#1]]}}}
+\newcommand{\cut}[1]{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Command for citation
+%\newcommand{\citet}[1]{{\newcite{#1}}}
+
+% Commands for Sections, Figures, Equations, etc.
+
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\eqnref}[1]{Equation~\ref{#1}}
+\newcommand{\alref}[1]{Algorithm~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+ 
+%% Notation
+
+\newcommand{\Ca}{\set{C}}
+\newcommand{\Doc}[2]{{D_{#1}^{#2}}}
+\newcommand{\dynunc}{\texttt{dynamic-unc}}
+\newcommand{\dynconst}{\texttt{dynamic-const}}
+\newcommand{\e}[1]{{\mathbb E}\left[ #1 \right]}
+\newcommand{\fixkunc}{\texttt{static-k-unc}}
+\newcommand{\fixkconst}{\texttt{static-k-const}}
+\newcommand{\La}{\set{L}}
+\newcommand{\set}[1]{{\mathcal{#1}}}
+\newcommand{\Un}{\set{U}}
+\newcommand{\vocab}[1]{{\sl #1}}
+\newcommand{\Y}{\set{Y}}
+\newcommand{\Neu}{\set{N}}
+\newcommand{\x}{{\mathbf x}}
+\newcommand{\Score}{\mathrm{Score}}
+%\newcommand{\N}{\texttt{RND-\-FULL}}
+\newcommand{\N}{\texttt{N}}
+
+
+%% Structured Reading 
+\newcommand{\rnd}[1]{\texttt{rnd\_#1}}
+\newcommand{\unc}[1]{\texttt{unc\_#1}}
+\newcommand{\rndfirst}{\texttt{rnd\_first1}}
+
+\newcommand{\AAL}{\textsc{AAL}}
+\newcommand{\SR}{\textsc{structured reading}}
+
+
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\DeclareMathOperator*{\argmax}{arg\,max} 
+%\DeclareMathOperator*{\argmin}{arg\,min} 
+ 
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
+\newcommand{\commentout}[1]{}
+
+
+\newcounter{theexample} \setcounter{theexample}{1}
+\newenvironment{example}[1][]{\medskip\noindent {\textbf{Example
+\arabic{theexample}. #1} \stepcounter{theexample} \rm}{\medskip}}
+
+\def\sharedaffiliation{%
+\end{tabular}
+\begin{tabular}{c}}
+
+\setlength\titlebox{6.5cm}    % Expanding the titlebox
+
+\title{Detecting Social Bots on Twitter: An Anytime Active Learning Approach \Thanks{This report was developed as part of a course project for CS579-F14 and is part of the AAL research project at the Machine Learning Lab at IIT.}}
+
+\author{Maria E. Ramirez-Loaiza \\
+{\tt mramire8@hawk.iit.edu} \\
+Illinois Institute of Technology\\
+  	Chicago, IL 60616
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Abstract here. 
+\end{abstract}
+
+
+\input{intro}
+\input{method}
+%\input{expeval}
+\input{results}
+\input{relwork}
+\input{concl}
+
+\bibliographystyle{plainnat}
+\bibliography{bib/abr,bib/bib} 
+
+\end{document}

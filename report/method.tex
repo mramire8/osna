@@ -1,0 +1,94 @@
+% !TEX root = ./master.tex
+ 
+\section{Methodology}
+
+In this section, we first review standard active learning and then formulate our proposed method. 
+
+\subsection{Problem Formulation}
+
+Let $\La = \{(\x_i, y_i)\}_{i=1}^l$ be a labeled dataset where $\x_i \in
+\mathbb{R}^d$ is a $d$-dimensional feature vector that represents a Twitter user timeline and $y_i \in \{y^0=\mathrm{human}, y^1=\mathrm{bot}\}$ is its class label. Let $\Un = \{\x_i\}_{i=l+1}^{m}$ be a set of unlabeled examples. Let $P_\La(y|\x)$ be the conditional probability of $y$ given $\x$ according to a classifier trained on $\La$.
+
+Typical pool-based active learning selects instances $\Un^* \subseteq \Un$ to
+be labeled by a human annotator ({\it oracle}) and appended to $\La$. Assuming
+a prespecified annotation budget $B$ and an annotation cost function $C(\x)$,
+the goal of the active learning algorithm ({\it student}) is to select $\Un^*$
+to minimize the classifier's generalization error subject to the budget
+constraints:
+%
+\begin{multline}
+\label{eq.pool}
+\Un^* \leftarrow \argmin_{\Un_i \subseteq \Un} Err(P_{\La\ \cup\ \Un_i}(y|\x)) \\
+\hbox{ s.t. } \sum_{\x_j\in \Un_i} C(\x_j) \le B
+\end{multline}
+
+Equation~\ref{eq.pool} is typically optimized by greedy algorithms, selecting
+one or more examples at a time according to some heuristic criterion that
+estimates the utility of each labeled example. A common approach is to request
+a label for the unlabeled instance that maximizes benefit-cost 
+ratio: $\x_i^* \leftarrow \argmax_{\x_i \in \Un} \frac{U(\x_i)}{C(\x_i)}$.
+
+Various definitions of utility $U(\cdot)$ are used in the literature, such as
+expected error reduction~\cite{roy:icml01} and classifier
+uncertainty~\cite{lewis:sigir94}.  In this paper, we use uncertainty sampling for our formulation. More formally, uncertainty sampling queries the instances whose predicted posterior probability is the least confident, redefining \eqnref{eq.pool}: 
+
+\begin{equation}\label{eq:unc}
+ \x^* \leftarrow \argmax_{\x_i \in \Un} \left(1- \max_{y \in Y} P_{\La}(\hat{y}|\x_i) \right)	
+\end{equation}
+
+\eqnref{eq:unc} uses conditional error as a measure of confidence.
+
+%\cut{ Another common definition of uncertainty is entropy as the utility measure \cite{shannon:bstj48}:
+%
+%\begin{equation}\label{eq:ent}
+% \x^* \leftarrow \argmax_{\x_i \in \Un} \left( - \sum_{y \in Y} P_{\La}(\hat{y}|\x_i) \log(P_{\La}(\hat{y}|\x_i))      \right)	
+%\end{equation}
+%}
+We propose the use of an anytime active learning technique to save annotation cost by controlling what the oracle sees \cite{ramirez:aaai14}. The idea is that the student selects the most representative tweet of a user timeline and queries the oracle for the label. We define an alternative formulation of the active learning problem in which the student has the added capability of presenting one tweet the human oracle to request a label. 
+
+Let $s_i^k$ be the $k$-th tweet in user $\x_i$ timeline. Each tweet is scored by a function $TS(\cdot)$. We build upon \eqnref{eq:unc} and incorporate the tweet selection into the student's objective:
+%
+\begin{multline} \label{eq:obj}
+    \argmax_{s_i^k \in \x_i \in \Un} \left(1- \max_{y \in Y} P_{\La}(\hat{y}|\x_i) \times TS(s_i^k) \right)
+\end{multline}
+%
+Intuitively, we want to select a tweet that allows the oracle to determine if the author of the tweet is human or not. Also, we want that tweet to be likely to be labeled since we optimize the budget simultaneously. A simple way to define $TS(\cdot)$ that selects the best tweet for annotation, is to select the tweet that a tweet classifier is most confident about. Thus we define $TweetScore(\cdot)$ as follows:
+%
+\begin{multline}\label{eq:score}
+ \argmax_{s_i^k \in \x_i \in \Un} \left(1- \max_{y \in Y} P_{\La}(\hat{y}|\x_i) \times P_T(y_{max} | s_i^k) \right)	
+\end{multline}
+\noindent
+where $P_T$ is a probabilistic classifier that determines how likely is an individual tweet to be bot or human generated. In practice, we use tweets $s_i^k \in \x_i \in \La$ to train the tweet classifier.  
+  
+%%==============================================================
+\section{Experimental Evaluation}
+
+\subsection{Data Collection}
+%
+Our experiments uses data collected from Twitter based on the \textbf{Social Honeypots} dataset \cite{lee:aaai11}. We use a subset of a collection of known legitimate and bot account user names, to build our own dataset. We collected the most recent timeline of each user up to 200 tweets. We collected 883 legitimate user and 898 bot accounts. 
+
+The data was further filtered by removing accounts whose last activity was older than 2014, eliminating 45 and 173 accounts from legitimate and bots respectively. For our active learning experiments, we report average of five trials on a train-test split. 
+
+
+\subsection{Data Preprocessing}
+%
+Each tweet was tokenized by words, ignoring punctuation, collapsing URLs and mentions. Every token was converted to lower case and stemmed using a Porter stemmer. The resulting tokens were used to form a TF-IDF feature vector using unigrams. To reduce the size of the dictionary terms that appear less than five times are removed. The final dictionary size is of 13399 features. \tabref{tab:data} characteristics of the representation.
+
+\begin{table}[htdp]
+\caption{Collected data from Twitter per type of user}
+\begin{center}
+\begin{tabular}{|c|c|c|c|} \hline
+\textbf{Class} & \textbf{N. Users} &\textbf{Avg. Tweets} \\  \hline
+Human & 838 & 199 \\ \hline
+Bots & 725  & 196 \\ \hline
+\end{tabular}
+\end{center}
+\label{tab:data}
+\end{table}%
+
+
+\subsection{Simulations}
+
+\textbf{oracle}
+
+\textbf{student}

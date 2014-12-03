@@ -1,0 +1,34 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Lee et~al.(2011)Lee, Eoff, and Caverlee]{lee:aaai11}
+Kyumin Lee, BD~Eoff, and James Caverlee.
+\newblock {Seven Months with the Devils: A Long-Term Study of Content Polluters
+  on Twitter.}
+\newblock \emph{Proceedings of the Fifth International AAAI Conference on
+  Weblogs and Social Media (ICWSM)}, 2011.
+
+\bibitem[Lewis and Gale(1994)]{lewis:sigir94}
+David~D. Lewis and William~A. Gale.
+\newblock A sequential algorithm for training text classifiers.
+\newblock In \emph{{ACM SIGIR Conference on Research and Development in
+  Information Retrieval}}, pages 3--12, 1994.
+
+\bibitem[Ramirez-Loaiza et~al.(2014)Ramirez-Loaiza, Culotta, and
+  Bilgic]{ramirez:aaai14}
+Maria~E. Ramirez-Loaiza, Aron Culotta, and Mustafa Bilgic.
+\newblock {Anytime Active Learning}.
+\newblock In \emph{AAAI Conference on Artificial Intelligence}, 2014.
+
+\bibitem[Roy and McCallum(2001)]{roy:icml01}
+Nicholas Roy and Andrew McCallum.
+\newblock Toward optimal active learning through sampling estimation of error
+  reduction.
+\newblock In \emph{{International Conference on Machine Learning}}, pages
+  441--448, 2001.
+
+\end{thebibliography}
