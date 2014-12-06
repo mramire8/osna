@@ -24,5 +24,6 @@ Containt the report files. The main file is **master.pdf** ([see here](https://g
 This folder contains the code needed to collect the data. The main files are:
 
 1. ```data_collect.py``` this file contains the code to collect the timeline of users from Twitter. We used 1000 user from each kind good and bot. 
+2. ```active learning``` active learning code is located at the [active learning](https://github.com/mramire8/active) repository
 
 After using ```data_collect```, the data can be used as dataset using the function describe in the notebook. 
