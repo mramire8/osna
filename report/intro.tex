@@ -2,18 +2,20 @@
  
 \section{Introduction}
 
-\outl{Active learning}
-
 \outl{Use in social networks}
+The advent of social networks provided the general public with outlets to communicate, express ideas and sentiment, and spread information at fast rates and vast volumes. The emergent property of instance communication has been use to keep contact when other ways are not possible, for example, during natural disasters families can communicate. However, there is downside of the same property. Much of the information spread through the media is not verified and sources are unknown, causing the spread of misinformation. For example, a user can broadcast a message and quickly spread around the world without being verified. In a recent report \footnote{From the Twitter 2Q 2014 Earnings Report available on https://investor.twitterinc.com}, Twitter estimated that 8\% (about 23 million accounts) of their active monthly users have no discernible human control, i.e., there is not way to determine if the there is a human producing the information. This undetermined accounts are usually referred as \vocab{social bots} or simply \vocab{bots}
 
-\outl{tweeter classficiation task}
+There have been efforts to develop supervised machine learning methods to determine if an account is likely to be from a human or not. However, this methods typically require a lot labeled data, and the labeling effort can be costly. \vocab{Active learning} is an alternative to build annotated data and reduce the human effort on annotation. Typically, an active learner iteratively selects unlabeled examples and queries the labels to a human annotator or \vocab{oracle}. In this paper, we propose the use of active learning methods to speed up annotation of Tweeter data to detect social bots. We begin with the intuition that during annotation a human annotator will look for a key tweet that provides evidence of bot generated content. 
 
-\outl{challenge}
+The main idea is to select a user's content and pick a tweet to query the oracle for the label. The question is whether we can find the best tweet for annotation that will allow the oracle to provide a correct label. The saving in annotation comes from the oracle analyzing only one carefully select tweet instead of a full timeline. The drawback is that the oracle can incorrectly label a tweet and introduce errors in the training data. Therefore, the active learner has to consider what tweet will provide the best change of correct annotation. 
 
-\outl{proposed method}
+In this work, we evaluate several approaches to select tweets. We performed experiments on collected data based on an existing list of known human and bot accounts \citep{lee:aaai11}. Our research questions are as follows:
 
-\outl{challenges}
+\textbf{RQ1. How does the data representation affect the classification performance?}
+We found that for this classification task the tested representation options do not affect the classification accuracy significantly. 
 
-\outl{experiments}
+\textbf{RQ2. How does the model selection affect active learning performance?}
+We found that the best models are multinomial naive bayes and logistic regression with L2 regularization. However, during the active learning loop, the best results are obtained by logistic regression.
 
-\outl{research questions}
+\textbf{RQ3. How does selecting the best tweet affect the learning efficiency?}
+We found that selecting the best tweet is not able to outperform the first and random tweet baselines. We provide insights regarding the possible cause of the poor performance. 

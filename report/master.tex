@@ -20,7 +20,7 @@
 
 \usepackage{amsfonts}
 \usepackage{amsmath}
-\usepackage{color}
+\usepackage[usenames,dvipsnames]{color}
 \usepackage{courier}
 \usepackage{enumerate}
 \usepackage{helvet}
@@ -37,7 +37,7 @@
 \newcommand{\outl}[1]{{\tt Outline: #1}} % this should be deleted before the submission
 \newcommand{\notemb}[1]{{\color{blue}MB: #1}}
 \newcommand{\noteac}[1]{{\color{cyan}AC: #1}}
-\newcommand{\noteme}[1]{{\color{green}ME: #1}}
+\newcommand{\noteme}[1]{{{\tt\color{BrickRed}ME: #1}}}
 \newcommand{\fixme}[1]{{{\tt\color{red}[[#1]]}}}
 \newcommand{\cut}[1]{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,7 +113,7 @@ Illinois Institute of Technology\\
 \begin{document}
 \maketitle
 \begin{abstract}
-Abstract here. 
+Social networks allow the general publish to generate, share and spread information at a fast pace. However, even though spreading information fast can be beneficial, it can also increases the risk of misinformation due to lack of validation. On Twitter, automated accounts can easily increase the  traffic of unvalidated information. There has been research efforts in machine learning to detect such automated content generator, to help identify reliable sources. We propose to build a machine learning model using active learning strategies to reduce the effort of annotation. To the best of our knowledge this is a novel method to address the classification of human and automated Twitter accounts. 
 \end{abstract}
 
 

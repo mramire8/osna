@@ -1,4 +1,4 @@
-% !TEX root = ./master.tex
+	% !TEX root = ./master.tex
  
 \section{Methodology}
 
@@ -44,23 +44,25 @@ uncertainty~\cite{lewis:sigir94}.  In this paper, we use uncertainty sampling fo
 % \x^* \leftarrow \argmax_{\x_i \in \Un} \left( - \sum_{y \in Y} P_{\La}(\hat{y}|\x_i) \log(P_{\La}(\hat{y}|\x_i))      \right)	
 %\end{equation}
 %}
-We propose the use of an anytime active learning technique to save annotation cost by controlling what the oracle sees \cite{ramirez:aaai14}. The idea is that the student selects the most representative tweet of a user timeline and queries the oracle for the label. We define an alternative formulation of the active learning problem in which the student has the added capability of presenting one tweet the human oracle to request a label. 
+We propose the use of an anytime active learning technique to save annotation cost by controlling what the oracle sees \citep{ramirez:aaai14}. The idea is that the student selects the most representative tweet of a user timeline and queries the oracle for the label. We define an alternative formulation of the active learning problem in which the student has the added capability of presenting one tweet the human oracle to request a label. 
 
-Let $s_i^k$ be the $k$-th tweet in user $\x_i$ timeline. Each tweet is scored by a function $TS(\cdot)$. We build upon \eqnref{eq:unc} and incorporate the tweet selection into the student's objective:
+Let $s_i^k$ be the $k$-th tweet in user $\x_i$ timeline. Each tweet is scored by a function $TS(\cdot)$ which determines how important is a tweet for labeling. We build upon \eqnref{eq:unc} and incorporate the tweet selection into the student's objective:
 %
 \begin{multline} \label{eq:obj}
-    \argmax_{s_i^k \in \x_i \in \Un} \left(1- \max_{y \in Y} P_{\La}(\hat{y}|\x_i) \times TS(s_i^k) \right)
+    \argmax_{ \x_i \in \Un} 1- \max_{y \in Y} P_{\La}(\hat{y}|\x_i) \times max_{s_i^k \in \x_i} TS(s_i^k)
 \end{multline}
 %
-Intuitively, we want to select a tweet that allows the oracle to determine if the author of the tweet is human or not. Also, we want that tweet to be likely to be labeled since we optimize the budget simultaneously. A simple way to define $TS(\cdot)$ that selects the best tweet for annotation, is to select the tweet that a tweet classifier is most confident about. Thus we define $TweetScore(\cdot)$ as follows:
+In our experiments, we define $TS(\cdot)$ as the tweet most likely to be labeled. Intuitively, we want to select a tweet that allows the oracle to determine if the author of the tweet is human or not. Also, we want that tweet to be likely to be labeled since we optimize the budget simultaneously. Formally, we define the function as: 
 %
-\begin{multline}\label{eq:score}
- \argmax_{s_i^k \in \x_i \in \Un} \left(1- \max_{y \in Y} P_{\La}(\hat{y}|\x_i) \times P_T(y_{max} | s_i^k) \right)	
-\end{multline}
+\begin{align}
+	TS(s_i^k) = \max_{y} T(y_i | s_i^k)
+\end{align}
+%
 \noindent
-where $P_T$ is a probabilistic classifier that determines how likely is an individual tweet to be bot or human generated. In practice, we use tweets $s_i^k \in \x_i \in \La$ to train the tweet classifier.  
-  
+where $T(\cdot)$  is a tweet probabilistic classifier that determines how likely is an individual tweet to be bot or human generated. In practice, we use tweets $s_i^k \in \x_i \in \La$ to train the tweet classifier.  
+
 %%==============================================================
+
 \section{Experimental Evaluation}
 
 \subsection{Data Collection}
@@ -85,10 +87,9 @@ Bots & 725  & 196 \\ \hline
 \end{center}
 \label{tab:data}
 \end{table}%
-
-
+ 
 \subsection{Simulations}
 
-\textbf{oracle}
+\textbf{Simulated Oracle.} We simulated the oracle by training a logistic regression classifier with L2 regularization, with the default regularization C=1 parameter. The classifier was trained on the tweets in the train-split of the data. At every iteration the simulated oracle will return the predicted label of the queried tweet. 
 
-\textbf{student}
+\textbf{Student}. For the student, we use a logistic regression classifier with the same configuration of the simulated oracle. We start every experiment with a small amount of labeled data, 50 user's timeline. $T$ classifier is bootstrapped with the individual tweets of the initial 50 users. 
